@@ -34,6 +34,15 @@ class ProfileController extends Controller
 
         $request->user()->save();
 
+        //2.プロフィール情報の更新（追加：user_name,biography）
+        $request->user()->profile()->updateOrCreate(
+            ['user_id' => $request->user()->id],
+            [
+                'display_name' => $request->input('display_name'),
+                'biography' => $request->input('biography'),
+            ]    
+        );
+
         return Redirect::route('profile.edit')->with('status', 'profile-updated');
     }
 

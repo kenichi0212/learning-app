@@ -24,6 +24,17 @@
         </div>
 
         <div>
+            <x-input-label for="display_name" :value="__('ニックネーム')" />
+            <x-text-input id="display_name" name="display_name" type="text" class="mt-1 block w-full" :value="old('display_name', $user->profile->display_name ?? '')" required />
+            <x-input-error class="mt-2" :messages="$errors->get('display_name')" />
+        </div>
+
+        <div class="mt-4">
+            <x-input-label for="biography" :value="__('自己紹介')" />
+            <textarea id="biography" name="biography" class="mt-1 block w-full border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm">{{ old('biography', $user->profile->biography ?? '') }}</textarea>
+            <x-input-error class="mt-2" :messages="$errors->get('biography')" />
+        </div>
+        <div>
             <x-input-label for="email" :value="__('Email')" />
             <x-text-input id="email" name="email" type="email" class="mt-1 block w-full" :value="old('email', $user->email)" required autocomplete="username" />
             <x-input-error class="mt-2" :messages="$errors->get('email')" />

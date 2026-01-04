@@ -10,6 +10,12 @@
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6 text-gray-900">
                     {{ __("You're logged in!") }}
+                
+                    <div class="mt-10">
+                        <x-primary-button>
+                            保存する
+                        </x-primary-button>
+                    </div>
                 </div>
             </div>
         </div>
