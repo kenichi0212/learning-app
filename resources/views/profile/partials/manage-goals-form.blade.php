@@ -25,15 +25,9 @@
             </div>
 
             <div class="mt-4">
-                <x-input-label for="stop_doing" :value="__('目標のために止めること')" />
+                <x-input-label for="stop_doing" :value="__('目標達成のために止めること')" />
                 <x-text-input id="stop_doing" name="stop_doing" type="text" class="mt-1 block w-full" :value="old('stop_doing', $user->goal->stop_doing ?? '')" />
                 <x-input-error class="mt-2" :messages="$errors->get('stop_doing')" />
-            </div>
-
-            <div class="mt-10">
-                <x-input-label for="if_then_busy" :value="__('忙しいときの習慣化プラン')" />
-                <textarea id="if_then_busy" name="if_then_busy" class="mt-1 block w-full border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm" rows="4">{{ old('if_then_busy', $user->goal->if_then_busy ?? '') }}</textarea>
-                <x-input-error class="mt-2" :messages="$errors->get('if_then_busy')" />
             </div>
     
             <header>
@@ -44,11 +38,15 @@
 
             <div class="mt-4">
                 <x-input-label for="if_then_normal" :value="__('通常時の習慣化プラン')" />
-                <textarea id="if_then_normal" name="if_then_normal" class="mt-1 block w-full border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm" rows="4">{{ old('if_then_normal', $user->goal->if_then_normal ?? '') }}</textarea>
+                <textarea id="if_then_normal" placeholder="自宅に帰って食事をしたらプログラミングを始める" name="if_then_normal" class="mt-1 block w-full border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm" rows="4">{{ old('if_then_normal', $user->goal->if_then_normal ?? '') }}</textarea>
                 <x-input-error class="mt-2" :messages="$errors->get('if_then_normal')" />
             </div>
                     
-
+            <div class="mt-10">
+                <x-input-label for="if_then_busy" :value="__('忙しいときの習慣化プラン')" />
+                <textarea id="if_then_busy" placeholder="vscodeを開いて10分だけ作業する" name="if_then_busy" class="mt-1 block w-full border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm" rows="4">{{ old('if_then_busy', $user->goal->if_then_busy ?? '') }}</textarea>
+                <x-input-error class="mt-2" :messages="$errors->get('if_then_busy')" />
+            </div>
 
             <div class="flex items-center gap-4">
                 <x-primary-button>{{ __('保存') }}</x-primary-button>
