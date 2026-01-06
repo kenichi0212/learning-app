@@ -18,6 +18,8 @@ class ProfileController extends Controller
     {
         return view('profile.edit', [
             'user' => $request->user(),
+            //目標一覧も一緒に画面へ送る
+            'goals' => $request->user()->goals,
         ]);
     }
 

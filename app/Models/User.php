@@ -10,6 +10,7 @@ use Illuminate\Notifications\Notifiable;
 use Illuminate\Auth\Notifications\VerifyEmail;
 use Illuminate\Notifications\Messages\MailMessage;
 
+
 class User extends Authenticatable implements MustVerifyEmail
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
@@ -63,5 +64,21 @@ class User extends Authenticatable implements MustVerifyEmail
         });
 
         $this->notify(new VerifyEmail);
+    }
+
+    /**
+     * profileモデルとのリレーション
+     * */
+    public function profile()
+    {
+        return $this->hasOne(Profile::class);
+    }
+
+    /**
+     * goalモデルとのリレーション
+     * */
+    public function goals()
+    {
+        return $this->hasMany(Goal::class);
     }
 }
