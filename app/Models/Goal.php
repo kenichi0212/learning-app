@@ -11,8 +11,8 @@ class Goal extends Model
     protected $fillable = [
         'user_id',
         'title',
-        'target_time',
         'deadline',
+        'stop_doing',
         'if_then_normal',
         'if_then_busy',
     ];
