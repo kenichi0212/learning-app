@@ -17,15 +17,15 @@ class GoalController extends Controller
         // 1. バリデーション（入力チェック）
         $request->validate([
             'title' => ['required', 'string', 'max:255'],
-            'target_time' => ['required', 'integer', 'min:1'],
-            'deadline' => ['nullable', 'date'],
+            'deadline' => ['required', 'date'],
+            'stop_doing' => ['nullable', 'string', 'max:500'],
             'if_then_normal' => ['nullable', 'string', 'max:500'],
             'if_then_busy' => ['nullable', 'string', 'max:500'],
         ]);
 
         // 2. ログインユーザーに紐づけてGoalレコードを作成
         // Userモデルに定義した goals() リレーションを利用します
-        $request->user()->goals()->create($request->all());
+        $request->user()->goals()->updateOrCreate(['user_id' => $request->user()->id], $request->all());
 
         // 3. 【重要】プロフィール編集画面へリダイレクト
         // 'status' に 'goal-updated' を渡すと、Breezeの仕組みで「Saved.」と表示しやすくなります
