@@ -14,9 +14,9 @@ return new class extends Migration
         Schema::create('goals', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
-            $table->string('title');
-            $table->dateTime('target_time'); 
-            $table->date('deadline');       
+            $table->string('title'); 
+            $table->date('deadline');
+            $table->text('stop-doing')->nullable();       
             $table->text('if_then_normal')->nullable(); 
             $table->text('if_then_busy')->nullable();  
             $table->timestamps();
