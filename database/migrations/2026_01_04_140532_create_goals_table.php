@@ -16,7 +16,7 @@ return new class extends Migration
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->string('title'); 
             $table->date('deadline');
-            $table->text('stop-doing')->nullable();       
+            $table->text('stop_doing')->nullable();       
             $table->text('if_then_normal')->nullable(); 
             $table->text('if_then_busy')->nullable();  
             $table->timestamps();

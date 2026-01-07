@@ -8,9 +8,8 @@
         </p>
     </header>    
 
-        <form method="POST" action="{{ route('profile.update') }}" class="mt-6 space-y-6">
+        <form method="POST" action="{{ route('goals.store') }}" class="mt-6 space-y-6">
             @csrf
-            @method('patch')
 
             <div>
                 <x-input-label for="title" :value="__('目標は？')" />

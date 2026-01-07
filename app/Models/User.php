@@ -77,8 +77,8 @@ class User extends Authenticatable implements MustVerifyEmail
     /**
      * goalモデルとのリレーション
      * */
-    public function goals()
+    public function goal()
     {
-        return $this->hasMany(Goal::class);
+        return $this->hasOne(Goal::class);
     }
 }

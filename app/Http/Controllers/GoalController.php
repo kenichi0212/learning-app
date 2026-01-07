@@ -23,13 +23,15 @@ class GoalController extends Controller
             'if_then_busy' => ['nullable', 'string', 'max:500'],
         ]);
 
-        // 2. ログインユーザーに紐づけてGoalレコードを作成
-        // Userモデルに定義した goals() リレーションを利用します
-        $request->user()->goals()->updateOrCreate(['user_id' => $request->user()->id], $request->all());
+        // 2. ログインユーザーに紐づけてGoalレコードを作成または更新
+$request->user()->goal()->updateOrCreate(
+    ['user_id' => $request->user()->id],
+    $request->only(['title', 'deadline', 'stop_doing', 'if_then_normal', 'if_then_busy'])
+);
 
         // 3. 【重要】プロフィール編集画面へリダイレクト
         // 'status' に 'goal-updated' を渡すと、Breezeの仕組みで「Saved.」と表示しやすくなります
-        return redirect()->route('profile.edit')->with('status', 'ゴール設定を更新しました！');
+        return redirect()->route('profile.edit')->with('status', 'profile-updated');
     }
 
     /**
