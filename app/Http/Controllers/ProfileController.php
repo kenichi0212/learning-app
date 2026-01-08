@@ -18,36 +18,32 @@ class ProfileController extends Controller
     {
         return view('profile.edit', [
             'user' => $request->user(),
-            //目標一覧も一緒に画面へ送る
-            'goals' => $request->user()->goals,
         ]);
     }
 
-    /**
-     * Update the user's profile information.
-     */
     public function update(ProfileUpdateRequest $request): RedirectResponse
     {
-        $request->user()->fill($request->validated());
+        // 1. Userモデル（名前やメール）の更新
+        // validated() から display_name と biography を除外したデータで fill する
+        $user = $request->user();
+        $user->fill($request->safe()->only(['name', 'email'])); 
 
-        if ($request->user()->isDirty('email')) {
-            $request->user()->email_verified_at = null;
+        if ($user->isDirty('email')) {
+            $user->email_verified_at = null;
         }
 
-        $request->user()->save();
+        $user->save();
 
-        //2.プロフィール情報の更新（追加：user_name,biography）
-        $request->user()->profile()->updateOrCreate(
-            ['user_id' => $request->user()->id],
-            [
-                'display_name' => $request->input('display_name'),
-                'biography' => $request->input('biography'),
-            ]    
+        // 2. Profileリレーションの更新
+        $profileData = $request->safe()->only(['display_name', 'biography']);
+
+        $user->profile()->updateOrCreate(
+            ['user_id' => $user->id],
+            $profileData
         );
 
         return Redirect::route('profile.edit')->with('status', 'profile-updated');
     }
-
     /**
      * Delete the user's account.
      */
