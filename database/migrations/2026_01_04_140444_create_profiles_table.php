@@ -18,6 +18,8 @@ return new class extends Migration
             $table->text('biography')->nullable();
             $table->string('image_path')->nullable();
             $table->timestamps();
+            $table->boolean('is_camera_enabled')->default(false)->after('biography');
+            $table->boolean('is_screenshot_enabled')->default(false)->after('is_camera_enabled');
         });
     }
 
