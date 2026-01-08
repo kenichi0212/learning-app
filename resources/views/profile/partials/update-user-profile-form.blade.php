@@ -14,7 +14,8 @@
 
         <div>
             <x-input-label for="display_name" :value="__('ニックネーム')" />
-            <x-text-input id="display_name" name="display_name" type="text" class="mt-1 block w-full" :value="old('display_name', $user->profile->display_name ?? '')" required />
+            <x-text-input id="display_name" name="display_name" type="text" 
+                class="mt-1 block w-full" :value="old('display_name', $user->profile->display_name ?? '')" required />
             <x-input-error class="mt-2" :messages="$errors->get('display_name')" />
         </div>
 
