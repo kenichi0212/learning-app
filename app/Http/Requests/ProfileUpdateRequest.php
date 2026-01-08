@@ -27,8 +27,8 @@ class ProfileUpdateRequest extends FormRequest
                 Rule::unique(User::class)->ignore($this->user()->id),
             ],
             //2.プロフィール情報のバリデーション追加（user_name,biography）     
-            'display_name' => ['required', 'string', 'max:255'],
-            'biography' => ['nullable', 'string', 'max:1000'],
+            'display_name' => ['sometimes', 'required', 'string', 'max:255'],
+            'biography' => ['sometimes', 'nullable', 'string', 'max:1000'],
         ];
     }
 }
