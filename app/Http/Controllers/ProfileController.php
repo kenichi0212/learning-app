@@ -35,7 +35,14 @@ class ProfileController extends Controller
         $user->save();
 
         // 2. Profileリレーションの更新
-        $profileData = $request->safe()->only(['display_name', 'biography']);
+        //array_mergeはトグルスイッチがあるために使用
+        $profileData = array_merge(
+            $request->safe()->only(['display_name', 'biography']),
+            [
+                'is_camera_enabled' => $request->boolean('is_camera_enabled'),
+                'is_screenshot_enabled' => $request->boolean('is_screenshot_enabled'),
+            ]
+        );
 
         $user->profile()->updateOrCreate(
             ['user_id' => $user->id],
