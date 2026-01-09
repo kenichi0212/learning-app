@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\View\View;
+use Symfony\Component\HttpFoundation\Response;
 
 class ProfileController extends Controller
 {
@@ -21,7 +22,7 @@ class ProfileController extends Controller
         ]);
     }
 
-    public function update(ProfileUpdateRequest $request): RedirectResponse
+    public function update(ProfileUpdateRequest $request)
     {
         // 1. Userモデル（名前やメール）の更新
         // validated() から display_name と biography を除外したデータで fill する
@@ -48,6 +49,11 @@ class ProfileController extends Controller
             ['user_id' => $user->id],
             $profileData
         );
+
+        // AJAXリクエストの場合はJSONで応答
+        if ($request->expectsJson()) {
+            return response()->json(['success' => true]);
+        }
 
         return Redirect::route('profile.edit')->with('status', 'profile-updated');
     }
