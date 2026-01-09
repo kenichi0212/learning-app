@@ -16,10 +16,9 @@ class ProfileUpdateRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => ['sometimes', 'required', 'string', 'max:255'],
+            'name' => ['sometimes', 'string', 'max:255'],
             'email' => [
                 'sometimes',
-                'required',
                 'string',
                 'lowercase',
                 'email',
@@ -27,7 +26,7 @@ class ProfileUpdateRequest extends FormRequest
                 Rule::unique(User::class)->ignore($this->user()->id),
             ],
             //2.プロフィール情報のバリデーション追加（user_name,biography）     
-            'display_name' => ['sometimes', 'required', 'string', 'max:255'],
+            'display_name' => ['sometimes', 'string', 'max:255'],
             'biography' => ['sometimes', 'nullable', 'string', 'max:1000'],
 
             'is_camera_enabled' => ['sometimes', 'boolean'],
