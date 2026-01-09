@@ -45,15 +45,18 @@ document.addEventListener('DOMContentLoaded', function() {
     
     function updateCameraSettings() {
         const formData = new FormData();
-        formData.append('is_camera_enabled', document.getElementById('is_camera_enabled').checked);
-        formData.append('is_screenshot_enabled', document.getElementById('is_screenshot_enabled').checked);
+        formData.append('is_camera_enabled', document.getElementById('is_camera_enabled').checked ? 1 : 0);
+        formData.append('is_screenshot_enabled', document.getElementById('is_screenshot_enabled').checked ? 1 : 0);
         formData.append('_method', 'PATCH');
         
         fetch('{{ route("profile.update") }}', {
             method: 'POST',
             body: formData,
+            credentials: 'same-origin',
             headers: {
                 'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+                'Accept': 'application/json',
+                'X-Requested-With': 'XMLHttpRequest'
             }
         })
         .then(response => response.json())
