@@ -19,7 +19,9 @@ return new class extends Migration
             $table->integer('total_duration')->default(0);
             $table->integer('effective_duration')->default(0);
             $table->string('session_status')->default('active');
-            $table->timestamps();   
+            $table->timestamps();
+            $table->boolean('is_camera_enabled')->default(false);
+            $table->boolean('is_screenshot_enabled')->default(false);
         });
     }
 
