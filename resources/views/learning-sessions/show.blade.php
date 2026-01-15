@@ -77,6 +77,7 @@
                 // 再開
                 isMonitoring = true;
                 startTimerUI();
+                startMonitoringInterval();
                 startBtn.classList.add('hidden');
                 pauseBtn.classList.remove('hidden');
                 stopBtn.classList.remove('hidden');
@@ -88,6 +89,8 @@
             isMonitoring = false;
             //タイマー停止
             if (timerInterval) clearInterval(timerInterval);
+            //監視タイムアウト停止（AIチェック＆ログ記録停止）
+            if (monitoringTimeout) clearTimeout(monitoringTimeout);
 
             //UIの更新
             pauseBtn.classList.add('hidden');
