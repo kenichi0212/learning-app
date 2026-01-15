@@ -62,7 +62,7 @@ class LearningSessionController extends Controller
     }
 
     //sessionの終了
-    public function end($id)
+    public function stop($id)
     {
         $session = LearningSession::where('id', $id)
             ->where('user_id', Auth::id())
