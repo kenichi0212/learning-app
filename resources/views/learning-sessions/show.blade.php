@@ -13,7 +13,7 @@
 
             {{-- カメラ部分 --}}
             @include('learning-sessions.partials.camera')
-            
+
         </div>
     </div>
 
@@ -106,23 +106,41 @@
             if (timerInterval) clearInterval(timerInterval);
             if (monitoringTimeout) clearTimeout(monitoringTimeout);
 
-            //カメラストリームの停止（ブラウザアイコンを消すため）
-            if (video.srcObject) {
-                const tracks = video.srcObject.getTracks();
-                tracks.forEach(track => track.stop());
-                video.srcObject = null;
-            }
-            //画面ストリームの停止
-            if (screenStream) {
-                const screenTracks = screenStream.getTracks();
-                screenTracks.forEach(track => track.stop());
-                screenStream = null;
-            }
+            try {
+                const res = await fetch(`/learning/stop/${sessionId}`, {
+                    method: 'POST',
+                    headers: {
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json'
+                    }
+                });
 
-            alert("お疲れ様でした！学習セッションを終了します。");
-        
-            window.location.href = '/learning';
+                const result = await res.json();
+                
+                if (result.success) {
+                    //カメラストリームの停止（ブラウザアイコンを消すため）
+                    if (video.srcObject) {
+                        video.srcObject.getTracks().forEach(track => track.stop());
+                    }
+                    //画面ストリームの停止
+                    if (screenStream) {
+                        screenStream.getTracks().forEach(track => track.stop());
+                    }
+
+                    alert("お疲れ様でした！学習セッションを終了します。");
+                
+                    location.reload();
+                } else {
+                    throw new Error("処理に失敗しました");
+                }
+            
+            } catch (err) {
+                console.error("Error in stopSession", err);
+                alert("保存中にエラーが発生しました");
+            }
         });
+
         // TensorFlow.js モデルのロード
         async function loadModel() {
             if (!model) {
