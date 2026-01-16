@@ -38,7 +38,7 @@ class LearningSessionController extends Controller
         $session = LearningSession::where('id', $id)
             ->where('user_id', Auth::id())
             ->firstOrfail();
-        
+
         //5分(300秒)間隔のチェック
         $interval = 300;
 
@@ -51,7 +51,7 @@ class LearningSessionController extends Controller
         }
 
         $session->save();
-        
+
         return response()->json([
             'success' => true,
             'total' => $session->total_duration,
@@ -66,12 +66,12 @@ class LearningSessionController extends Controller
             ->where('user_id', Auth::id())
             ->first();
 
-            if ($session) {
-                $session->update([
-                    'end_at' => now(),
-                    'session_status' => 'finished',
-                ]);
-            }
+        if ($session) {
+            $session->update([
+                'end_at' => now(),
+                'session_status' => 'finished',
+            ]);
+        }
 
         return response()->json(['success' => true]);
     }
