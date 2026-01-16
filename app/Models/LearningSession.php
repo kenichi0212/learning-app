@@ -13,7 +13,5 @@ class LearningSession extends Model
         'total_duration',
         'effective_duration',
         'session_status',
-        'is_camera_enabled',
-        'is_screenshot_enabled',
     ];
 }
