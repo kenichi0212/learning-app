@@ -131,7 +131,7 @@
                         screenStream.getTracks().forEach(track => track.stop());
                     }
 
-                    alert("お疲れ様でした！学習セッションを終了します。");
+                alert("お疲れ様でした！学習セッションを終了します。");
                 
                     location.reload();
                 } else {
