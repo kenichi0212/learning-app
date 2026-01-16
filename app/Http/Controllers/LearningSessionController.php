@@ -25,8 +25,6 @@ class LearningSessionController extends Controller
             'total_duration' => 0,
             'effective_duration' => 0,
             'session_status' => 'active',
-            'is_camera_enabled' => $request->input('camera_enabled', true),
-            'is_screenshot_enabled' => $request->input('screenshot_enabled', true),
         ]);
         return response()->json([
             'success' => true,
