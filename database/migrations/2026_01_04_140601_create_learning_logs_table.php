@@ -16,7 +16,8 @@ return new class extends Migration
             $table->foreignId('learning_session_id')->constrained()->onDelete('cascade');
             $table->timestamp('captured_at')->useCurrent();
             $table->boolean('is_away')->default(false);
-            $table->boolean('is_irrelevant')->default(false);
+            $table->boolean('is_changed')->default(false);
+            $table->timestamps();
         });
     }
 
