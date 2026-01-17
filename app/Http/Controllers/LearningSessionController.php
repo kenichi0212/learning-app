@@ -32,15 +32,16 @@ class LearningSessionController extends Controller
         ]);
     }
 
-    //5分おきの更新通知（API的役割）
+    //定期的な更新通知
     public function update(Request $request, $id)
     {
         $session = LearningSession::where('id', $id)
             ->where('user_id', Auth::id())
             ->firstOrfail();
 
-        //5分(300秒)間隔のチェック
-        $interval = 300;
+        // フロントから送られてきた実際の経過時間（秒）を取得
+        // 一時停止や離席中は送られないので、その時間は除外される
+        $interval = $request->input('interval', 10); // デフォルト10秒
 
         //総学習時間を加算
         $session->total_duration += $interval;
@@ -50,6 +51,12 @@ class LearningSessionController extends Controller
             $session->effective_duration += $interval;
         }
 
+        \App\Models\LearningLog::create([
+            'learning_session_id' => $id,
+            'captured_at' => now(),
+            'is_away' => !$request->input('has_face'), // 顔認証の結果
+            'is_changed' => $request->input('screen_changed'), // 画面変化の結果
+        ]);
         $session->save();
 
         return response()->json([
