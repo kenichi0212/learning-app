@@ -10,6 +10,8 @@ class LearningLog extends Model
         'learning_session_id',
         'captured_at',
         'is_away',
-        'is_irrelevant',
+        'is_changed',
     ];
+
+    public $timestamps = true;
 }
