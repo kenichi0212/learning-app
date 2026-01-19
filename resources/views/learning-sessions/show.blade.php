@@ -104,7 +104,10 @@
         //学習終了ボタン
         stopBtn.addEventListener('click', async () => {
             if (!confirm("本当に学習を終了しますか？")) return;
-
+            if (!sessionId) {
+                alert("セッションIDが取得できていません。開始後に終了してください。");
+                return;
+            }
 
             //監視停止とタイマーを停止
             isMonitoring = false;
@@ -120,6 +123,12 @@
                         'Accept': 'application/json'
                     }
                 });
+
+                if (!res.ok) {
+                    // サーバがHTMLを返した場合のJSONパースエラーを避ける
+                    const text = await res.text();
+                    throw new Error(text || "停止APIエラー");
+                }
 
                 const result = await res.json();
 
