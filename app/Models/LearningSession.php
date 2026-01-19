@@ -14,4 +14,9 @@ class LearningSession extends Model
         'effective_duration',
         'session_status',
     ];
+
+    protected $casts = [
+        'start_at' => 'datetime',
+        'end_at' => 'datetime',
+    ];
 }
