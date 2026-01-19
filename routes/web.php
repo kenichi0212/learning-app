@@ -28,7 +28,9 @@ Route::middleware('auth')->group(function () {
     // 5分おきの更新通知（API的役割）
     Route::post('/learning/update/{id}', [LearningSessionController::class, 'update'])->name('learning.update');
     //sessionの終了
-    Route::post('/learning/stop/{id}', [LearningSessionController::class, 'stop'])->name('learning.stop');   
+    Route::post('/learning/stop/{id}', [LearningSessionController::class, 'stop'])->name('learning.stop');
+    //学習履歴一覧
+    Route::get('/history', [LearningSessionController::class, 'index'])->name('learning-sessions.index');
 });
 
-require __DIR__.'/auth.php';
+require __DIR__ . '/auth.php';
