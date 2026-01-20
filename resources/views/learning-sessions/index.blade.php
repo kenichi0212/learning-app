@@ -12,11 +12,11 @@
                 <table class="min-w-full divide-y divide-gray-200">
                     <thead class="bg-gray-50">
                         <tr>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">日付</th>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">開始時刻</th>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">終了時刻</th>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">総計測時間</th>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">実質学習時間</th>
+                            <th class="px-6 py-3 text-left text-x font-medium text-gray-500 uppercase tracking-wider">日付</th>
+                            <th class="px-6 py-3 text-left text-x font-medium text-gray-500 uppercase tracking-wider">開始時刻</th>
+                            <th class="px-6 py-3 text-left text-x font-medium text-gray-500 uppercase tracking-wider">終了時刻</th>
+                            <th class="px-6 py-3 text-left text-x font-medium text-gray-500 uppercase tracking-wider">総計測時間</th>
+                            <th class="px-6 py-3 text-left text-x font-medium text-gray-500 uppercase tracking-wider">実質学習時間</th>
                         </tr>
                     </thead>
                     <tbody class="bg-white divide-y divide-gray-200">
