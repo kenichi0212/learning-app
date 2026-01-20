@@ -9,9 +9,9 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/dashboard', function () {
-    return view('dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
+Route::get('/dashboard', [LearningSessionController::class, 'dashboard'])
+    ->middleware(['auth', 'verified'])
+    ->name('dashboard');
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
@@ -31,6 +31,8 @@ Route::middleware('auth')->group(function () {
     Route::post('/learning/stop/{id}', [LearningSessionController::class, 'stop'])->name('learning.stop');
     //学習履歴一覧
     Route::get('/history', [LearningSessionController::class, 'index'])->name('learning-sessions.index');
+    //logo
+    Route::get('/post', [LearningSessionController::class, 'post'])->name('post.index');
 });
 
 require __DIR__ . '/auth.php';
