@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\LearningSession;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
+use Carbon\Carbon;
 
 
 class LearningSessionController extends Controller
@@ -127,5 +128,41 @@ class LearningSessionController extends Controller
         $sessions = $query->orderBy('start_at', 'desc')->paginate(10);
 
         return view('learning-sessions.index', compact('sessions'));
+    }
+
+    public function dashboard()
+    {
+        $user = Auth::user();
+        $now = Carbon::now();
+
+        // 期間ごとの集計（秒単位で取得し、分に変換）
+        $stats = [
+            'total' => LearningSession::where('user_id', $user->id)->sum('effective_duration'),
+            'today' => LearningSession::where('user_id', $user->id)->whereDate('start_at', today())->sum('effective_duration'),
+            'week'  => LearningSession::where('user_id', $user->id)->whereBetween('start_at', [$now->copy()->startOfWeek(), $now->copy()->endOfWeek()])->sum('effective_duration'),
+            'month' => LearningSession::where('user_id', $user->id)->whereMonth('start_at', $now->month)->whereYear('start_at', $now->year)->sum('effective_duration'),
+            'last_month' => LearningSession::where('user_id', $user->id)->whereMonth('start_at', $now->copy()->subMonth()->month)->whereYear('start_at', $now->copy()->subMonth()->year)->sum('effective_duration'),
+        ];
+
+        // 直近5件のセッション
+        $recentSessions = LearningSession::where('user_id', $user->id)
+            ->where('session_status', 'finished')
+            ->orderBy('start_at', 'desc')
+            ->take(5)
+            ->get();
+
+        return view('dashboard', compact('stats', 'recentSessions'));
+    }
+
+    // 合計秒数を「○時間○分」の文字列で返すメソッド
+    public static function formatDuration($seconds)
+    {
+        $hours = floor($seconds / 3600);
+        $minutes = floor(($seconds % 3600) / 60);
+
+        if ($hours > 0) {
+            return "{$hours}時間{$minutes}分";
+        }
+        return "{$minutes}分";
     }
 }
