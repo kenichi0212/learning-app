@@ -5,16 +5,35 @@
             <div class="flex">
                 <!-- Logo -->
                 <div class="shrink-0 flex items-center">
-                    <a href="{{ route('dashboard') }}">
-                        <x-application-logo class="block h-9 w-auto fill-current text-gray-800" />
+                    <a href="{{ route('learning.show') }}" class="flex items-center gap-1 no-underline">
+                        <x-application-logo class="block h-9 w-auto fill-current text-indigo-600" />
+                        <span class="font-bold text-xl text-gray-800 tracking-tight">学習管理アプリ</span>
                     </a>
                 </div>
 
                 <!-- Navigation Links -->
                 <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
-                    <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
-                        {{ __('Dashboard') }}
-                    </x-nav-link>
+                    <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
+                        {{-- ダッシュボード --}}
+                        <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
+                            {{ __('ダッシュボード') }}
+                        </x-nav-link>
+
+                        {{-- 学習履歴 (route名の learning-sessions.index に合わせる) --}}
+                        <x-nav-link :href="route('learning-sessions.index')" :active="request()->routeIs('learning-sessions.index')">
+                            {{ __('学習履歴') }}
+                        </x-nav-link>
+
+                        {{-- 学習開始 (route名の learning に合わせる) --}}
+                        <x-nav-link :href="route('learning.show')" :active="request()->routeIs('learning.show')">
+                            {{ __('学習セッション') }}
+                        </x-nav-link>
+
+                        {{-- 目標設定 (追加すると便利です) --}}
+                        <x-nav-link :href="route('profile.edit')" :active="request()->routeIs('profile.edit')">
+                            {{ __('プロフィール/目標設定') }}
+                        </x-nav-link>
+                    </div>
                 </div>
             </div>
 
@@ -43,7 +62,7 @@
                             @csrf
 
                             <x-dropdown-link :href="route('logout')"
-                                    onclick="event.preventDefault();
+                                onclick="event.preventDefault();
                                                 this.closest('form').submit();">
                                 {{ __('Log Out') }}
                             </x-dropdown-link>
@@ -89,7 +108,7 @@
                     @csrf
 
                     <x-responsive-nav-link :href="route('logout')"
-                            onclick="event.preventDefault();
+                        onclick="event.preventDefault();
                                         this.closest('form').submit();">
                         {{ __('Log Out') }}
                     </x-responsive-nav-link>
