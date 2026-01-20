@@ -10,8 +10,8 @@ class Profile extends Model
         'user_id',
         'display_name',
         'biography',
-        'is_camera_enabled', 
-        'is_screenshot_enabled', 
+        'is_camera_enabled',
+        'is_screenshot_enabled',
         'image_path',
     ];
 }
