@@ -25,7 +25,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/learning', [LearningSessionController::class, 'show'])->name('learning.show');
     //sessionの開始
     Route::post('/learning/start', [LearningSessionController::class, 'start'])->name('learning.start');
-    // 5分おきの更新通知（API的役割）
+    // 5分おきの更新通知
     Route::post('/learning/update/{id}', [LearningSessionController::class, 'update'])->name('learning.update');
     //sessionの終了
     Route::post('/learning/stop/{id}', [LearningSessionController::class, 'stop'])->name('learning.stop');
