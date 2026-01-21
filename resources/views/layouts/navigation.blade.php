@@ -57,6 +57,16 @@
                             {{ __('Profile') }}
                         </x-dropdown-link>
 
+                        {{-- 学習履歴 (route名の learning-sessions.index に合わせる) --}}
+                        <x-dropdown-link :href="route('learning-sessions.index')" :active="request()->routeIs('learning-sessions.index')">
+                            {{ __('学習履歴') }}
+                        </x-dropdown-link>
+
+                        {{-- 学習開始 (route名の learning に合わせる) --}}
+                        <x-dropdown-link :href="route('learning.show')" :active="request()->routeIs('learning.show')">
+                            {{ __('学習セッション') }}
+                        </x-dropdown-link>
+
                         <!-- Authentication -->
                         <form method="POST" action="{{ route('logout') }}">
                             @csrf
