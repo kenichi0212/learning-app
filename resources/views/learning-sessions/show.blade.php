@@ -394,35 +394,45 @@
                 // （AIを動かさないので、時計の表示には影響しません）
                 if (isMonitoring && seconds > 0 && seconds % 10 === 0) {
 
-                    // 10秒地点で即座にチェック開始（非同期でも待たずに処理開始）
-                    console.log(`${seconds}秒地点：AI検知開始`);
+                    // 【重要】AI処理を「非同期」で実行し、タイマーの進行を邪魔しないようにする
+                    // async/awaitをあえて切り離して実行
+                    (async () => {
+                        console.log(`${seconds}秒地点：AI検知開始`);
 
-                    //顔認証(TensorFlow.js)
-                    const predictions = await model.estimateFaces(video, false);
-                    const hasFace = predictions.length > 0;
+                        // 判定中はタイマー加算を止める（11秒目に進まないようにする）
+                        isMonitoring = false;
 
-                    //画面変化チェック
-                    const screenChanged = await checkScreenDifference();
+                        //顔認証(TensorFlow.js)
+                        const predictions = await model.estimateFaces(video, false);
+                        const hasFace = predictions.length > 0;
 
-                    //最終的な学習中判定
-                    const isEffective = hasFace && screenChanged;
+                        //画面変化チェック
+                        const screenChanged = await checkScreenDifference();
 
-                    // 前回の更新から経過した時間（インターバル）を計算
-                    const interval = seconds - lastUpdateSeconds;
-                    lastUpdateSeconds = seconds;
+                        //最終的な学習中判定
+                        const isEffective = hasFace && screenChanged;
 
-                    await updateSession(isEffective, hasFace, screenChanged, interval);
+                        // 前回の更新から経過した時間（インターバル）を計算
+                        const interval = seconds - lastUpdateSeconds;
+                        lastUpdateSeconds = seconds;
 
-                    if (!hasFace) {
-                        isMonitoring = false; // 離席なら時計を止める
-                        const resume = confirm("離席を検知しました。学習を再開する場合はOKを押してください。");
-                        // OK押下後にただ再開する（秒数はそのまま） — 秒の二重進行を防ぐため increment はしない
-                        if (resume) {
-                            isMonitoring = true; // OK押下で再開
+                        await updateSession(isEffective, hasFace, screenChanged, interval);
+
+                        if (!hasFace) {
+                            const resume = confirm("離席を検知しました。学習を再開する場合はOKを押してください。");
+                            // OK押下後にただ再開する（秒数はそのまま） — 秒の二重進行を防ぐため increment はしない
+                            if (resume) {
+                                isMonitoring = true; // OK押下で再開
+                            }
+                        } else if (!screenChanged) {
+                            console.warn("画面の変化がありません。静止画または放置の可能性があります。");
+                            // 顔がある場合は監視を継続
+                            isMonitoring = true;
+                        } else {
+                            // 通常継続
+                            isMonitoring = true;
                         }
-                    } else if (!screenChanged) {
-                        console.warn("画面の変化がありません。静止画または放置の可能性があります。");
-                    }
+                    })();
                 }
                 monitoringTimeout = setTimeout(check, 1000);
             }
