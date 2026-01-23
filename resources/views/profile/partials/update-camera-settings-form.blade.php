@@ -1,7 +1,6 @@
-
 <section>
     <header>
-        <h2 class="text-lg font-medium text-gray-900">
+        <h2 class="text-lg font-medium text-gray-800">
             {{ __('カメラ設定・スクショ設定') }}
         </h2>
     </header>
@@ -9,8 +8,8 @@
     <div class="mt-6 space-y-4">
         <div class="flex items-center justify-between p-4 border rounded-lg border-gray-300 shadow-sm">
             <div>
-                <label for="is_camera_enabled" class="font-medium text-gray-700">カメラを使用する</label>
-                <p class="text-sm text-gray-500">学習セッション中にカメラでの離席検知を使用しない場合はオフにしてください。</p>
+                <label for="is_camera_enabled" class="font-medium text-gray-800">カメラを使用する</label>
+                <p class="text-sm text-gray-600">学習セッション中にカメラでの離席検知を使用しない場合はオフにしてください。</p>
             </div>
             <label class="relative inline-flex items-center cursor-pointer">
                 <input type="checkbox" name="is_camera_enabled" id="is_camera_enabled" value="1" class="sr-only peer camera-setting"
@@ -21,8 +20,8 @@
 
         <div class="flex items-center justify-between p-4 border rounded-lg border-gray-300 shadow-sm">
             <div>
-                <label for="is_screenshot_enabled" class="font-medium text-gray-700">スクショを使用する</label>
-                <p class="text-sm text-gray-500">学習セッション中にスクショでの離席検知を使用しない場合はオフにしてください。</p>
+                <label for="is_screenshot_enabled" class="font-medium text-gray-800">スクショを使用する</label>
+                <p class="text-sm text-gray-600">学習セッション中にスクショでの離席検知を使用しない場合はオフにしてください。</p>
             </div>
             <label class="relative inline-flex items-center cursor-pointer">
                 <input type="checkbox" name="is_screenshot_enabled" id="is_screenshot_enabled" value="1" class="sr-only peer camera-setting"
@@ -34,39 +33,39 @@
 </section>
 
 <script>
-document.addEventListener('DOMContentLoaded', function() {
-    const cameraSettings = document.querySelectorAll('.camera-setting');
-    
-    cameraSettings.forEach(setting => {
-        setting.addEventListener('change', function() {
-            updateCameraSettings();
+    document.addEventListener('DOMContentLoaded', function() {
+        const cameraSettings = document.querySelectorAll('.camera-setting');
+
+        cameraSettings.forEach(setting => {
+            setting.addEventListener('change', function() {
+                updateCameraSettings();
+            });
         });
+
+        function updateCameraSettings() {
+            const formData = new FormData();
+            formData.append('is_camera_enabled', document.getElementById('is_camera_enabled').checked ? 1 : 0);
+            formData.append('is_screenshot_enabled', document.getElementById('is_screenshot_enabled').checked ? 1 : 0);
+            formData.append('_method', 'PATCH');
+
+            fetch('{{ route("profile.update") }}', {
+                    method: 'POST',
+                    body: formData,
+                    credentials: 'same-origin',
+                    headers: {
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+                        'Accept': 'application/json',
+                        'X-Requested-With': 'XMLHttpRequest'
+                    }
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        // 成功時の処理（オプション）
+                        console.log('設定が更新されました');
+                    }
+                })
+                .catch(error => console.error('エラー:', error));
+        }
     });
-    
-    function updateCameraSettings() {
-        const formData = new FormData();
-        formData.append('is_camera_enabled', document.getElementById('is_camera_enabled').checked ? 1 : 0);
-        formData.append('is_screenshot_enabled', document.getElementById('is_screenshot_enabled').checked ? 1 : 0);
-        formData.append('_method', 'PATCH');
-        
-        fetch('{{ route("profile.update") }}', {
-            method: 'POST',
-            body: formData,
-            credentials: 'same-origin',
-            headers: {
-                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
-                'Accept': 'application/json',
-                'X-Requested-With': 'XMLHttpRequest'
-            }
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
-                // 成功時の処理（オプション）
-                console.log('設定が更新されました');
-            }
-        })
-        .catch(error => console.error('エラー:', error));
-    }
-});
 </script>
