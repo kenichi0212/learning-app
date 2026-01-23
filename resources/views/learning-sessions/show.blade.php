@@ -21,28 +21,34 @@
     <script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/blazeface"></script>
 
     <script>
+        // TensorFlow.js モデル変数
         let model;
-        let sessionId = null;
-        let isMonitoring = false;
-        let seconds = 0;
-        let monitoringTimeout = null; //タイマーを管理する変数
-        let timerInterval = null;
         let lastScreenCanvas = null;
         let screenStream = null;
-        let startTime = null;
-        let accumukatedSeconds = 0;
-        let lastUpdateSeconds = 0; // 前回の更新時刻（秒）を記録
 
-        const video = document.getElementById('webcam');
-        const timerDisplay = document.getElementById('timerDisplay');
+        // セッション管理用変数
+        let sessionId = null;
+        let isMonitoring = false;
+        let startTime = null;
+
+        // タイマー管理用変数
+        let seconds = 0;
+        let accumulatedSeconds = 0;
+        let lastUpdateSeconds = 0; // 前回の更新時刻（秒）を記録
+        let timerInterval = null;
+        let monitoringTimeout = null; //タイマーを管理する変数
+
+        // 画面変化検出用閾値
         const DIFF_THRESHOLD = 0.1; // 画面変化の閾値（調整可能）
 
-        //ボタン要素を取得
+        // HTML要素の取得
+        const video = document.getElementById('webcam');
+        const timerDisplay = document.getElementById('timerDisplay');
         const startBtn = document.getElementById('startBtn');
         const pauseBtn = document.getElementById('pauseBtn');
         const stopBtn = document.getElementById('stopBtn');
 
-        // タイマー表示の更新
+        // タイマー表示更新関数
         function updateTimerText() {
             const h = String(Math.floor(seconds / 3600)).padStart(2, '0');
             const m = String(Math.floor((seconds % 3600) / 60)).padStart(2, '0');
@@ -64,7 +70,7 @@
                     await loadModel();
                     await startSystem();
 
-                    // startsystemが成功したらボタンを切り替える
+                    // startSystemが成功したらボタンを切り替える
                     startBtn.classList.add('hidden');
                     pauseBtn.classList.remove('hidden');
                     stopBtn.classList.remove('hidden');
