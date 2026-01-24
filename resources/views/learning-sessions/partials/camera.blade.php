@@ -3,7 +3,7 @@
         <h2 class="text-gray-800 font-bold absolute left-0">カメラモニター</h2>
 
         <div id="pipReconnectArea" class="hidden">
-            <button id="rePipBtn" class="bg-zinc-800 text-white px-6 py-2 rounded text-sm flex items-center justify-center hover:bg-zinc-700 transition">
+            <button id="rePipBtn" class="bg-gradient-to-r from-blue-600 to-indigo-600 text-white px-6 py-2 rounded text-sm flex items-center justify-center hover:bg-zinc-700 transition">
                 PiPを再度表示
             </button>
         </div>
