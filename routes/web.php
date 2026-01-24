@@ -5,10 +5,6 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\GoalController;
 use App\Http\Controllers\LearningSessionController;
 
-Route::get('/', function () {
-    return view('welcome');
-});
-
 Route::get('/dashboard', [LearningSessionController::class, 'dashboard'])
     ->middleware(['auth', 'verified'])
     ->name('dashboard');
