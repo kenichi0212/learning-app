@@ -3,20 +3,20 @@
     <div class="text-5xl font-mono text-gray-800 mb-6" id="timerDisplay">00:00:00</div>
 
     <div id="buttonGroup" class="flex justify-center space-x-4 mb-8">
-        <button id="startBtn" class="bg-zinc-800 text-white px-10 py-3 rounded text-xl flex items-center justify-center hover:bg-zinc-700 transition">
+        <button id="startBtn" class="bg-gradient-to-r from-blue-600 to-indigo-600 text-white px-10 py-3 rounded text-xl flex items-center justify-center hover:bg-zinc-700 transition">
             <span class="mr-2">▷</span> 学習開始
         </button>
 
-        <button id="pauseBtn" class="hidden bg-zinc-800 text-white px-10 py-3 rounded text-xl flex items-center justify-center hover:bg-zinc-600 transition">
+        <button id="pauseBtn" class="hidden bg-gradient-to-r from-blue-600 to-indigo-600 text-white px-10 py-3 rounded text-xl flex items-center justify-center hover:bg-zinc-600 transition">
             <span class="mr-2">⏸</span> 一時停止
         </button>
 
-        <button id="stopBtn" class="hidden bg-zinc-800 text-white px-10 py-3 rounded text-xl flex items-center justify-center hover:bg-zinc-700 transition">
+        <button id="stopBtn" class="hidden bg-gradient-to-r from-blue-600 to-indigo-600 text-white px-10 py-3 rounded text-xl flex items-center justify-center hover:bg-zinc-700 transition">
             <span class="mr-2">⏹</span> 学習終了
         </button>
     </div>
 
-    <div class="mt-8 pt-6 border-t border-gray-100 text-left max-w-sm mx-auto">
+    <div class="mt-8 pt-6 border-t border-indigo-300 text-left max-w-sm mx-auto">
         <p class="text-sm text-gray-800 mb-2">
             <span class="font-bold text-indigo-600">※</span> 学習開始ボタンを押すとカメラと画面共有の確認が表示されます。
         </p>
