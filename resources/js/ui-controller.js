@@ -22,8 +22,12 @@ export function showPausedButtons(startBtn, pauseBtn) {
     pauseBtn.classList.add('hidden');
     startBtn.classList.remove('hidden');
     startBtn.disabled = false;
-    startBtn.innerText = "▷ 学習再開";
-}
+    startBtn.innerHTML = `
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M5.25 5.653c0-.856.917-1.398 1.667-.986l11.54 6.347a1.125 1.125 0 0 1 0 1.972l-11.54 6.347a1.125 1.125 0 0 1-1.667-.986V5.653Z" />
+    </svg>
+    学習再開
+`};
 
 /**
  * 学習開始ボタンをローディング状態にする
@@ -46,12 +50,12 @@ export function resetStartButton(startBtn) {
 /**
  * カメラUIの表示を更新
  * @param {HTMLElement} video - ビデオ要素
- * @param {HTMLElement} offMessage - オフメッセージ要素
+ * @param {HTMLElement} cameraOffUI - カメラOFF UI要素
  * @param {HTMLElement} cameraStatusText - カメラステータステキスト要素
  */
-export function showCameraOn(video, offMessage, cameraStatusText) {
+export function showCameraOn(video, cameraOffUI, cameraStatusText) {
     video.classList.remove('hidden');
-    offMessage.classList.add('hidden');
+    cameraOffUI.classList.add('hidden');
     cameraStatusText.innerText = 'ON';
 }
 
