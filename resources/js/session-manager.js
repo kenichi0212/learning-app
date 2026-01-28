@@ -67,7 +67,7 @@ export async function startSystem(params) {
         //3. UI更新
         window.showCameraOn(
             video,
-            document.getElementById('offMessage'),
+            document.getElementById('cameraOffUI'),
             document.getElementById('cameraStatusText')
         );
 
