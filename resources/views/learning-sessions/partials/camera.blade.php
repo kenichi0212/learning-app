@@ -1,7 +1,7 @@
-<div class="border rounded-lg p-10 bg-white shadow-sm relative text-center">
-    <div class="relative flex items-center justify-center mb-4 min-h-[40px]">
-        <h2 class="text-gray-800 font-bold absolute left-0">カメラモニター</h2>
-        <span class="text-sm font-bold text-gray-800 absolute right-0" id="cameraStatusText">OFF</span>
+<div class="border rounded-lg p-6 bg-white shadow-sm relative text-center">
+    <div class="flex items-center justify-between mb-4">
+        <h2 class="text-2xl text-gray-800 font-bold">カメラモニター</h2>
+        <span class="text-sm font-bold text-gray-800 px-3 py-1 bg-gray-100 rounded" id="cameraStatusText">OFF</span>
     </div>
 
     <div class="bg-zinc-800 rounded-lg aspect-video flex items-center justify-center relative overflow-hidden mx-auto max-w-xl group">

@@ -6,7 +6,7 @@
     </x-slot>
 
     <x-page-container>
-        <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg p-1">
+        <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
 
             {{-- 学習履歴一覧 --}}
             <x-card title="学習履歴一覧" class="overflow-x-auto mt-1">

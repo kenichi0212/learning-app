@@ -6,7 +6,6 @@
     </x-slot>
 
     <x-page-container>
-        <div class="py-12">
             <div class="max-w-4xl mx-auto sm:px-6 lg:px-8 space-y-6">
 
                     {{-- タイマー部分 --}}
@@ -70,6 +69,5 @@
                     setupHandlers();
                 });
             </script>
-        </div>
     </x-page-container>
 </x-app-layout>
