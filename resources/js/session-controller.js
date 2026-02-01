@@ -72,6 +72,10 @@ export function setupSessionHandlers(params) {
                 // startSystemが成功したらボタンを切り替える
                 window.showRunningButtons(startBtn, pauseBtn, stopBtn);
 
+                //説明文を非表示にしてカメラを表示
+                document.getElementById('instructionsSection')?.classList.add('hidden');
+                document.getElementById('cameraSection')?.classList.remove('hidden');
+
             } catch (err) {
                 console.error("学習開始エラー:", err);
                 alert("学習の開始に失敗しました。");
