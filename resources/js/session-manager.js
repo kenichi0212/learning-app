@@ -26,6 +26,35 @@ export async function startSystem(params) {
         startMonitoringInterval
     } = params;
 
+    const buildMediaErrorMessage = (err, label) => {
+        const name = err?.name || 'UnknownError';
+        switch (name) {
+            case 'NotAllowedError':
+            case 'PermissionDeniedError':
+                return `${label}の権限が拒否されました。ブラウザのサイト設定で許可してください。`;
+            case 'NotFoundError':
+                return `${label}のデバイスが見つかりません。接続を確認してください。`;
+            case 'NotReadableError':
+                return `${label}が他のアプリで使用中です。使用中のアプリを終了してください。`;
+            case 'SecurityError':
+                return `${label}はHTTPSまたはlocalhostでのみ利用できます。`;
+            case 'OverconstrainedError':
+                return `${label}の要求条件を満たすデバイスがありません。`;
+            default:
+                return `${label}の起動に失敗しました。`;
+        }
+    };
+
+    if (!navigator.mediaDevices?.getUserMedia || !navigator.mediaDevices?.getDisplayMedia) {
+        alert('このブラウザはカメラ/画面共有に対応していません。');
+        throw new Error('MediaDevices API not supported');
+    }
+
+    if (!window.isSecureContext && location.hostname !== 'localhost' && location.hostname !== '127.0.0.1') {
+        alert('カメラ/画面共有はHTTPSまたはlocalhostでのみ利用できます。');
+        throw new Error('Insecure context');
+    }
+
     try {
         //1. カメラ取得
         console.log("Attempting to access camera...");
@@ -59,7 +88,7 @@ export async function startSystem(params) {
             setScreenStream(screenStream);
         } catch (screenErr) {
             console.warn("Screen share permission denied or not available.", screenErr);
-            alert("画面共有の権限が拒否されました。学習判定には画面共有が必要です。");
+            alert(buildMediaErrorMessage(screenErr, '画面共有'));
             //処理を中断
             return;
         }
@@ -96,7 +125,7 @@ export async function startSystem(params) {
 
     } catch (err) {
         console.error("Error in startSystem:", err);
-        alert("カメラの起動に失敗しました。権限を許可してください。");
+        alert(buildMediaErrorMessage(err, 'カメラ'));
         throw err;
     }
 }
