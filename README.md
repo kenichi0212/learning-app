@@ -1,4 +1,8 @@
 # 学習管理 App
+<img width="1442" height="860" alt="learning01" src="https://github.com/user-attachments/assets/41deef62-865f-48d0-a6d4-304d952063c9" />
+<img width="1411" height="442" alt="learnig02" src="https://github.com/user-attachments/assets/ead5f26a-7cd9-4277-b63b-6991d0373a37" />
+<img width="1441" height="557" alt="learning03" src="https://github.com/user-attachments/assets/1e2e305f-8a3f-47af-8122-90b828cdd3a5" />
+
 
 AIによる離席検知を備えた、学習セッション管理・可視化アプリです。
 学習中の「実質的な時間」を記録し、目標達成を支援します。
