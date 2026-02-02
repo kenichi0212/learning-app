@@ -16,6 +16,7 @@
     "require-dev": {
         "askdkc/breezejp": "^2.4",
         "fakerphp/faker": "^1.23",
+        "fly-apps/dockerfile-laravel": "^1.0",
         "laravel-lang/common": "^6.7",
         "laravel/breeze": "^2.3",
         "laravel/pail": "^1.2.2",
