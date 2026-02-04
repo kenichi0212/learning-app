@@ -18,7 +18,7 @@
 
 <body class="font-sans text-gray-900 antialiased">
     <div class="min-h-screen flex flex-col sm:justify-center items-center pt-6 sm:pt-0 bg-gradient-to-br from-indigo-900 via-blue-900 to-slate-900">
-        <div>
+        <div class="hidden">
             <a href="/">
                 <x-application-logo class="w-20 h-20" />
             </a>

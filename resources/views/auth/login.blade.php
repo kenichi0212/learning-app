@@ -1,4 +1,9 @@
 <x-guest-layout>
+    <div class="mb-6 flex items-center justify-center gap-3">
+        <x-application-logo class="h-8 w-auto" />
+        <h1 class="text-4xl font-bold text-orange-500">学習管理アプリ</h1>
+    </div>
+
     <!-- Session Status -->
     <x-auth-session-status class="mb-4" :status="session('status')" />
 
