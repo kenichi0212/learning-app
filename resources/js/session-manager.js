@@ -19,6 +19,8 @@ export async function startSystem(params) {
         video,
         pauseBtn,
         timerDisplay,
+        isCameraEnabled,
+        isScreenshotEnabled,
         getIsMonitoring,
         setIsMonitoring,
         setSessionId,
@@ -45,72 +47,86 @@ export async function startSystem(params) {
         }
     };
 
-    if (!navigator.mediaDevices?.getUserMedia || !navigator.mediaDevices?.getDisplayMedia) {
-        alert('このブラウザはカメラ/画面共有に対応していません。');
-        throw new Error('MediaDevices API not supported');
+    if (isCameraEnabled && !navigator.mediaDevices?.getUserMedia) {
+        alert('このブラウザはカメラに対応していません。');
+        throw new Error('getUserMedia not supported');
+    }
+    if (isScreenshotEnabled && !navigator.mediaDevices?.getDisplayMedia) {
+        alert('このブラウザは画面共有に対応していません。');
+        throw new Error('getDisplayMedia not supported');
     }
 
-    if (!window.isSecureContext && location.hostname !== 'localhost' && location.hostname !== '127.0.0.1') {
+    if ((isCameraEnabled || isScreenshotEnabled) && !window.isSecureContext && location.hostname !== 'localhost' && location.hostname !== '127.0.0.1') {
         alert('カメラ/画面共有はHTTPSまたはlocalhostでのみ利用できます。');
         throw new Error('Insecure context');
     }
 
     try {
         //1. カメラ取得
-        console.log("Attempting to access camera...");
-        const camstream = await navigator.mediaDevices.getUserMedia({
-            video: true,
-            audio: false
-        });
-        video.srcObject = camstream;
-
-        //カメラ映像のメタデータが読み込まれるまで待機
-        await new Promise((resolve) => {
-            video.onloadedmetadata = () => {
-                resolve();
-            };
-        });
-
-        //2. 画面共有を取得
-        console.log("Attempting to access screen share...");
-        try {
-            const screenStream = await navigator.mediaDevices.getDisplayMedia({
-                video: true
-            });
-
-            //画面共有が停止されたときの処理（ブラウザの共有を停止ボタン）
-            screenStream.getVideoTracks()[0].onended = () => {
-                alert("画面共有が停止されました。学習判定には画面共有が必要です。");
-                //処理を中断
-                pauseBtn.click();
-            };
-            
-            setScreenStream(screenStream);
-        } catch (screenErr) {
-            console.warn("Screen share permission denied or not available.", screenErr);
-            alert(buildMediaErrorMessage(screenErr, '画面共有'));
-            //処理を中断
-            return;
-        }
-
-        //3. UI更新
-        window.showCameraOn(
-            video,
-            document.getElementById('cameraOffUI'),
-            document.getElementById('cameraStatusText')
-        );
-
-        //4. PiP起動
-        if (document.pictureInPictureEnabled) {
+        if (isCameraEnabled) {
+            console.log("Attempting to access camera...");
             try {
-                await video.requestPictureInPicture().catch(console.error);
-            } catch (pipErr) {
-                console.warn("PiP failed:", pipErr);
+                const camstream = await navigator.mediaDevices.getUserMedia({
+                    video: true,
+                    audio: false
+                });
+                video.srcObject = camstream;
+
+                //カメラ映像のメタデータが読み込まれるまで待機
+                await new Promise((resolve) => {
+                    video.onloadedmetadata = () => {
+                        resolve();
+                    };
+                });
+
+                //3. UI更新
+                window.showCameraOn(
+                    video,
+                    document.getElementById('cameraOffUI'),
+                    document.getElementById('cameraStatusText')
+                );
+
+                //4. PiP起動
+                if (document.pictureInPictureEnabled) {
+                    try {
+                        await video.requestPictureInPicture().catch(console.error);
+                    } catch (pipErr) {
+                        console.warn("PiP failed:", pipErr);
+                    }
+                }
+
+                //5. PiP関連のイベントリスナーを設定
+                setupPipListeners(video, getIsMonitoring);
+            } catch (camErr) {
+                console.warn("Camera permission denied or not available.", camErr);
+                alert(buildMediaErrorMessage(camErr, 'カメラ'));
+                throw camErr;
             }
         }
 
-        //5. PiP関連のイベントリスナーを設定
-        setupPipListeners(video, getIsMonitoring);
+        //2. 画面共有を取得
+        if (isScreenshotEnabled) {
+            console.log("Attempting to access screen share...");
+            try {
+                const screenStream = await navigator.mediaDevices.getDisplayMedia({
+                    video: true
+                });
+
+                //画面共有が停止されたときの処理（ブラウザの共有を停止ボタン）
+                screenStream.getVideoTracks()[0].onended = () => {
+                    alert("画面共有が停止されました。学習判定には画面共有が必要です。");
+                    //処理を中断
+                    pauseBtn.click();
+                };
+                
+                setScreenStream(screenStream);
+            } catch (screenErr) {
+                console.warn("Screen share permission denied or not available.", screenErr);
+                alert(buildMediaErrorMessage(screenErr, '画面共有'));
+                //処理を中断
+                throw screenErr;
+            }
+        }
 
         //6. セッション開始（API送信）
         const data = await window.apiStartSession();
@@ -125,7 +141,6 @@ export async function startSystem(params) {
 
     } catch (err) {
         console.error("Error in startSystem:", err);
-        alert(buildMediaErrorMessage(err, 'カメラ'));
         throw err;
     }
 }

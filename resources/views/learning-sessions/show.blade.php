@@ -12,19 +12,30 @@
             @include('learning-sessions.partials.timer')
         </div>
 
+        <div
+            id="session-config"
+            class="hidden"
+            data-is-camera-enabled="@json($isCameraEnabled)"
+            data-is-screenshot-enabled="@json($isScreenshotEnabled)"
+            data-profile-settings-url="{{ route('profile.edit') }}#camera-settings"></div>
+
         <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs"></script>
         <script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/blazeface"></script>
 
         <script>
             // API関数と監視関数はapp.jsでグローバルに公開済み
             // セッション状態管理
+            const configEl = document.getElementById('session-config');
             const sessionState = {
                 model: null,
                 screenStream: null,
                 sessionId: null,
                 isMonitoring: false,
                 startTime: null,
-                monitoringTimeout: null
+                monitoringTimeout: null,
+                isCameraEnabled: JSON.parse(configEl?.dataset?.isCameraEnabled ?? 'false'),
+                isScreenshotEnabled: JSON.parse(configEl?.dataset?.isScreenshotEnabled ?? 'false'),
+                profileSettingsUrl: configEl?.dataset?.profileSettingsUrl ?? ''
             };
 
             // 状態取得関数

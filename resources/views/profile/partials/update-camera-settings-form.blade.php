@@ -1,6 +1,6 @@
 <section>
     <header>
-        <h2 class="text-lg font-medium text-gray-800">
+        <h2 id="camera-settings" class="text-lg font-medium text-gray-800">
             {{ __('カメラ設定・スクショ設定') }}
         </h2>
     </header>

@@ -4,6 +4,7 @@
 // グローバル変数（show.blade.phpから参照される）
 let lastScreenCanvas = null;
 const DIFF_THRESHOLD = 0.1; // 画面変化の閾値（調整可能）
+let isCheckingInProgress = false;
 
 // TensorFlow.js モデルのロード
 export async function loadModel() {
@@ -85,6 +86,8 @@ export function resetScreenCanvas() {
  * @param {HTMLElement} params.video - ビデオ要素
  * @param {Function} params.getScreenStream - screenStreamを取得する関数
  * @param {Function} params.getSessionId - sessionIdを取得する関数
+ * @param {boolean} params.isCameraEnabled - カメラ設定
+ * @param {boolean} params.isScreenshotEnabled - スクショ設定
  */
 export async function startMonitoringInterval(params) {
     const {
@@ -95,7 +98,9 @@ export async function startMonitoringInterval(params) {
         model,
         video,
         getScreenStream,
-        getSessionId
+        getSessionId,
+        isCameraEnabled,
+        isScreenshotEnabled
     } = params;
 
     const currentTimeout = getMonitoringTimeout();
@@ -104,42 +109,57 @@ export async function startMonitoringInterval(params) {
     async function check() {
         const currentSeconds = window.getSeconds();
         if (getIsMonitoring() && currentSeconds > 0 && currentSeconds % 10 === 0) {
+            if (isCheckingInProgress) {
+                const timeout = setTimeout(check, 1000);
+                setMonitoringTimeout(timeout);
+                return;
+            }
 
-            // AI処理を非同期で実行し、タイマーの進行を邪魔しないようにする
+            // AI処理を非同期で実行し、タイマーの進行を止めない
             (async () => {
-                const checkSeconds = window.getSeconds();
-                console.log(`${checkSeconds}秒地点：AI検知開始`);
+                isCheckingInProgress = true;
+                try {
+                    const checkSeconds = window.getSeconds();
+                    console.log(`${checkSeconds}秒地点：AI検知開始`);
 
-                // 判定中はタイマー加算を止める
-                setIsMonitoring(false);
+                    //顔認証(TensorFlow.js)
+                    let hasFace = true;
+                    if (isCameraEnabled) {
+                        hasFace = await checkFaceDetection(model, video);
+                    }
 
-                //顔認証(TensorFlow.js)
-                const hasFace = await checkFaceDetection(model, video);
+                    //画面変化チェック
+                    let screenChanged = true;
+                    if (isScreenshotEnabled) {
+                        screenChanged = await checkScreenDifference(getScreenStream());
+                    }
 
-                //画面変化チェック
-                const screenChanged = await checkScreenDifference(getScreenStream());
+                    //最終的な学習中判定
+                    const isEffective = hasFace && screenChanged;
 
-                //最終的な学習中判定
-                const isEffective = hasFace && screenChanged;
+                    // 前回の更新から経過した時間（インターバル）を計算
+                    const interval = checkSeconds - window.getLastUpdateSeconds();
+                    window.setLastUpdateSeconds(checkSeconds);
 
-                // 前回の更新から経過した時間（インターバル）を計算
-                const interval = checkSeconds - window.getLastUpdateSeconds();
-                window.setLastUpdateSeconds(checkSeconds);
+                    // セッション更新API呼び出し
+                    await window.apiUpdateSession(getSessionId(), isEffective, hasFace, screenChanged, interval);
 
-                // セッション更新API呼び出し
-                await window.apiUpdateSession(getSessionId(), isEffective, hasFace, screenChanged, interval);
-
-                if (!hasFace) {
-                    const resume = confirm("離席を検知しました。学習を再開する場合はOKを押してください。");
-                    if (resume) {
+                    if (!hasFace) {
+                        const resume = confirm("離席を検知しました。学習を再開する場合はOKを押してください。");
+                        if (resume) {
+                            setIsMonitoring(true);
+                        } else {
+                            setIsMonitoring(false);
+                        }
+                    } else if (!screenChanged) {
+                        console.warn("画面の変化がありません。静止画または放置の可能性があります。");
+                        setIsMonitoring(true);
+                    } else {
+                        // 通常継続
                         setIsMonitoring(true);
                     }
-                } else if (!screenChanged) {
-                    console.warn("画面の変化がありません。静止画または放置の可能性があります。");
-                    setIsMonitoring(true);
-                } else {
-                    // 通常継続
-                    setIsMonitoring(true);
+                } finally {
+                    isCheckingInProgress = false;
                 }
             })();
         }

@@ -15,7 +15,13 @@ class LearningSessionController extends Controller
      */
     public function show()
     {
-        return view('learning-sessions.show');
+        $user = Auth::user();
+        $profile = $user?->profile;
+
+        return view('learning-sessions.show', [
+            'isCameraEnabled' => (bool)($profile?->is_camera_enabled ?? false),
+            'isScreenshotEnabled' => (bool)($profile?->is_screenshot_enabled ?? false),
+        ]);
     }
 
     //sessionの開始

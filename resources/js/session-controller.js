@@ -37,20 +37,33 @@ export function setupSessionHandlers(params) {
         // 連打防止
         window.setStartButtonLoading(startBtn);
 
+        if (!state.isCameraEnabled && !state.isScreenshotEnabled) {
+            alert("最低限どちらかを選択するようにしてください。");
+            if (state.profileSettingsUrl) {
+                window.location.href = state.profileSettingsUrl;
+            }
+            window.resetStartButton(startBtn);
+            return;
+        }
+
         if (state.sessionId === null) {
             console.log('新規開始処理を実行');
             // 新規開始
             try {
-                console.log('モデルをロード中...');
-                const loadedModel = await loadModelWrapper(state.model);
-                setState({ model: loadedModel });
-                console.log('モデルロード完了');
+                if (state.isCameraEnabled) {
+                    console.log('モデルをロード中...');
+                    const loadedModel = await loadModelWrapper(state.model);
+                    setState({ model: loadedModel });
+                    console.log('モデルロード完了');
+                }
 
                 console.log('startSystemを呼び出し中...');
                 await window.startSystem({
                     video: video,
                     pauseBtn: pauseBtn,
                     timerDisplay: timerDisplay,
+                    isCameraEnabled: state.isCameraEnabled,
+                    isScreenshotEnabled: state.isScreenshotEnabled,
                     getIsMonitoring: () => getState().isMonitoring,
                     setIsMonitoring: (value) => setState({ isMonitoring: value }),
                     setSessionId: (id) => setState({ sessionId: id }),
@@ -64,7 +77,9 @@ export function setupSessionHandlers(params) {
                             model: getState().model,
                             video: video,
                             getScreenStream: () => getState().screenStream,
-                            getSessionId: () => getState().sessionId
+                            getSessionId: () => getState().sessionId,
+                            isCameraEnabled: getState().isCameraEnabled,
+                            isScreenshotEnabled: getState().isScreenshotEnabled
                         });
                     }
                 });
@@ -93,7 +108,9 @@ export function setupSessionHandlers(params) {
                 model: getState().model,
                 video: video,
                 getScreenStream: () => getState().screenStream,
-                getSessionId: () => getState().sessionId
+                getSessionId: () => getState().sessionId,
+                isCameraEnabled: getState().isCameraEnabled,
+                isScreenshotEnabled: getState().isScreenshotEnabled
             });
             window.showRunningButtons(startBtn, pauseBtn, stopBtn);
         }
